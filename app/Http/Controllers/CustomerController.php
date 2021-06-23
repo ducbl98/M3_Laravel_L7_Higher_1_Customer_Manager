@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\FormCustomerRequest;
+use App\Http\Requests\AddCustomerRequest;
+use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\City;
 use App\Models\Customer;
 use Illuminate\Http\Request;
@@ -35,7 +36,7 @@ class CustomerController extends Controller
      *
      * @param  Request  $request
      */
-    public function store(FormCustomerRequest $request): \Illuminate\Http\RedirectResponse
+    public function store(AddCustomerRequest $request): \Illuminate\Http\RedirectResponse
     {
         $customer = new Customer();
         $customer->name = $request->input('name');
@@ -78,13 +79,8 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateCustomerRequest $request, $id)
     {
-        $request->validate([
-            'name'=>'required',
-            'email'=>'required|email:rfc,dns|unique:customers,email,'.$id,
-            'dob'=>'required|before:today',
-        ]);
         $customer =Customer::findOrFail($id);
         $customer->name =$request->input('name');
         $customer->dob =$request->input('dob');

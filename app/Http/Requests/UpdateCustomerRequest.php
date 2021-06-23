@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class FormCustomerRequest extends FormRequest
+class UpdateCustomerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,9 +25,9 @@ class FormCustomerRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'email' => 'required|email:rfc,dns|unique:customers,email',
-            'dob' => 'required|before:today'
+            'name'=>'required',
+            'email'=>['required','email:rfc,dns',Rule::unique('customers','email')->ignore($this->id)],
+            'dob'=>'required|before:today',
         ];
     }
 
@@ -36,6 +36,7 @@ class FormCustomerRequest extends FormRequest
         return [
             'name.required' => "This field can't be empty",
             'email.required' => "This field can't be empty",
+            'email.email'=>'Wrong Email Format',
             'email.unique' => "This email is exist",
             'dob.required' => "This field can't be empty",
             'dob.before' => 'Invalid date',
